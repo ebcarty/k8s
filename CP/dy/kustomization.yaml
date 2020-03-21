@@ -1,0 +1,17 @@
+#Update the namespace for the registry if needed
+namespace: default
+commonLabels:
+  app: cloudpassage-connector
+#configMapGenerator:
+#- name: cp-server-label
+#  fieldref:
+#    fieldpath: metadata.name
+secretGenerator:
+- name: cp-agent-key
+  literals:
+  - agentKey=0e95d6f7804ab9af4866da41e2eaf8ab
+generatorOptions:
+ disableNameSuffixHash: true
+
+resources:
+- deployment.yaml

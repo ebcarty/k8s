@@ -1,0 +1,64 @@
+#Docker-Compose for CP-Halo-Agent, run using: docker-compose up -d
+version: '3.7'
+
+services:
+  cphalo:
+    image: cloudpassage/cphalo
+    restart: always
+    privileged: true
+    network_mode: host
+    pid: host
+    environment:
+      grid: https://grid.cloudpassage.com/grid
+      enable-docker-inspection: "true"
+      AGENT_KEY: 3fb985968e60d1a795678560735f8e21
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /:/media/root
+      - /opt/cloudpassage/data:/opt/cloudpassage/data
+
+docker run --pid=host --net=host --name cphalo --privileged -v /var/run/docker.sock:/var/run/docker.sock -v /:/media/root -v /opt/cloudpassage/data:/opt/cloudpassage/data -e AGENT_KEY=4c2c2ba5e940059b226a471dd58a0206 -d cloudpassage/cphalo --grid=https://grid.cloudpassage.com/grid --enable-docker-inspection=true --debug
+
+
+#!/bin/bash
+#   CloudPassage Halo Agent
+#   Unattended installation script on CentOS, Fedora, Oracle Linux, Red Hat, and Amazon Linux.
+#   -------------------------------------------------------------------------------------------
+#   This script is intended to be used for an unattended installation
+#   of the CloudPassage Halo agent.
+#
+#   IMPORTANT NOTES
+#
+#     * This script may require adjustment to conform to your server
+#       configuration. Please review this script and test it on a server
+#       before using it to install the Halo agent on multiple servers.
+#
+#     * This script contains the CloudPassage Halo agent registration key.
+#       Keep this script safe - handle it as
+#       you would the password to your CloudPassage portal account!
+#
+
+# add CloudPassage repository
+echo -e '[cloudpassage]
+name=CloudPassage
+baseurl=https://production.packages.cloudpassage.com/redhat/$basearch
+gpgcheck=1'  | sudo tee /etc/yum.repos.d/cloudpassage.repo > /dev/null
+
+# import CloudPassage public key
+sudo rpm --import https://production.packages.cloudpassage.com/cloudpassage.packages.key
+
+# update yum repositories
+sudo yum check-update > /dev/null
+
+# install the agent
+sudo yum -y install cphalo
+
+# configure agent key
+sudo /opt/cloudpassage/bin/configure --agent-key=924d41993eab8ef7c85441dcf53443c9 --grid=https://grid.cloudpassage.com/grid --enable-docker-inspection=true --debug
+
+# start the agent for the first time
+sudo /etc/init.d/cphalod start
+
+90900090990090909090909099090090909090990090990099090909090900909090909'
+
+sudo /opt/cloudpassage/bin/configure --agent-key=924d41993eab8ef7c85441dcf53443c9 --grid=https://grid.cloudpassage.com/grid --enable-docker-inspection=true --debug

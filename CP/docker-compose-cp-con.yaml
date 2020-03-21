@@ -1,0 +1,23 @@
+#YAML-for-CP-Connector
+version: '3.4'
+
+services:
+  cpconnector:
+    image: cloudpassage/cpconnector
+    restart: always
+    network_mode: host
+    pid: host
+    environment:
+      CP_SERVER_LABEL: AWS-ECR-usW2
+      CP_AGENT_KEY: 0e95d6f7804ab9af4866da41e2eaf8ab
+      CP_COLLECTOR_GRID_URL: https://containers.cloudpassage.com/collectorgrid
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers/:/var/lib/docker/containers/
+
+# docker run --pid=host --net=host --name cpconnector
+# -v /var/run/docker.sock:/var/run/docker.sock
+# -v /var/lib/docker/containers/:/var/lib/docker/containers/
+# -e CP_AGENT_KEY=0e95d6f7804ab9af4866da41e2eaf8ab
+# -e CP_COLLECTOR_GRID_URL=https://containers.cloudpassage.com/collectorgrid
+# -d cloudpassage/cpconnector

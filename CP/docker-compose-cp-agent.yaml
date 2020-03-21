@@ -1,0 +1,105 @@
+#Docker-Compose for CP-Halo-Agent, run using: docker-compose up -d
+version: '3.7'
+
+services:
+  cphalo:
+    image: cloudpassage/cphalo
+    restart: always
+    privileged: true
+    network_mode: host
+    pid: host
+    environment:
+      grid: https://grid.cloudpassage.com/grid
+      enable-docker-inspection: 'true'
+      AGENT_KEY: <AGENT_KEY>
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /:/media/root
+      - /opt/cloudpassage/data:/opt/cloudpassage/data
+
+
+services:
+  cphalo:
+image: cloudpassage/cphalo
+build:
+  restart: always
+  privileged: true
+  network_mode: host
+  pid: host
+  args: 
+    - grid="https://grid.cloudpassage.com/grid"
+  environment:
+    AGENT_KEY: <AGENT_KEY>
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /:/media/root
+    - /opt/cloudpassage/data:/opt/cloudpassage/data
+
+
+# docker run --pid=host --net=host --name cphalo --privileged
+# -v /var/run/docker.sock:/var/run/docker.sock
+# -v /:/media/root
+# -v /opt/cloudpassage/data:/opt/cloudpassage/data
+# -e AGENT_KEY=34a44b2980e2df7f6df66555c22cc594
+# -d cloudpassage/cphalo
+# --grid=https://grid.cloudpassage.com/grid
+
+
+version: '3.4'
+services:
+  cphalo: 
+    restart: always
+    privileged: true
+    network_mode: host
+    pid: host
+    image: cloudpassage/cphalo
+    build:
+      context: .
+      args: 
+        - grid="https://grid.cloudpassage.com/grid"
+      environment:
+        AGENT_KEY: ffb3e02d25e76d7a3aecce7679ac31e9
+      volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"
+        - "/:/media/root"
+        - "/opt/cloudpassage/data:/opt/cloudpassage/data"
+
+
+version: '3.3'
+
+services:
+   cphalo:
+     image: cloudpassage/cphalo
+     privileged: true
+     network_mode: host
+     pid: host
+     volumes:
+       - /var/run/docker.sock:/var/run/docker.sock
+       - /:/media/root
+       - /opt/cloudpassage/data:/opt/cloudpassage/data
+     restart: always
+     args:
+       - grid="https://grid.cloudpassage.com/grid"
+     environment:
+       AGENT_KEY: ffb3e02d25e76d7a3aecce7679ac31e9
+
+
+version: '3.3'
+
+services:
+   cphalo:
+     build:
+       context: .
+       args:
+         - grid="https://grid.cloudpassage.com/grid"
+     image: cloudpassage/cphalo
+     privileged: true
+     network_mode: host
+     pid: host
+     volumes:
+       - /var/run/docker.sock:/var/run/docker.sock
+       - /:/media/root
+       - /opt/cloudpassage/data:/opt/cloudpassage/data
+     restart: always
+     environment:
+       AGENT_KEY: ffb3e02d25e76d7a3aecce7679ac31e9

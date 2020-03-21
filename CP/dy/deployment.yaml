@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cp-registry-connector
+  namespace: default
+  labels:
+    app: cloudpassage-connector
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: cloudpassage-connector
+  template:
+    metadata:
+      labels:
+        app: cloudpassage-connector
+    spec:
+      hostPID: true
+      hostNetwork: true
+      containers:
+      - name: cpconnector
+        image: cloudpassage/cpconnector:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: "1.5"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "256Mi"
+        stdin: true
+        tty: true
+        env:
+          - name: CP_AGENT_KEY
+            value: 0e95d6f7804ab9af4866da41e2eaf8ab
+#            valueFrom:
+#              secretKeyRef:
+#                name: cp-agent-key
+#                key: agentKey
+          - name: CP_COLLECTOR_GRID_URL
+            value: "https://containers.cloudpassage.com/collectorgrid"
+          - name: CP_SERVER_LABEL
+            value: "Host-Server"
+#            valueFrom:
+#              fieldRef:
+#                fieldPath: spec.nodename
+#            valueFrom:
+#              configMapKeyRef:
+#                name: cp-server-label
+#                key: serverName
+        volumeMounts:
+          - name: docker-daemon-listener
+            mountPath: /var/run/docker.sock
+          - name: container-local-storage
+            mountPath: /var/lib/docker/containers
+      volumes:
+        - name: docker-daemon-listener
+          hostPath:
+            path: /var/run/docker.sock
+        - name: container-local-storage
+          hostPath:
+            path: /var/lib/docker/containers

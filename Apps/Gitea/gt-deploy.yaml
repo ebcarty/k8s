@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gt-pv-claim
+  namespace: default
+  labels:
+    app: gitea
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  # explicit empty storageClassName required in case a default storageClass exists
+  storageClassName: gp2
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: gitea
+  labels:
+    app: gitea
+spec:
+  selector:
+    matchLabels:
+      app: gitea
+      tier: frontend
+#  replicas: 3
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: gitea
+        tier: frontend
+    spec:
+      containers:
+      - image: gitea/gitea:latest
+        name: gitea
+        imagePullPolicy: "Always"
+        env:
+        - name: DB_TYPE
+          value: mysql
+        - name: DB_HOST
+          value: gitea-mariadb:3306
+        - name: DB_NAME
+          value: gitea
+        - name: DB_USER
+          value: gitea
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mdb-pass
+              key: password
+        ports:
+        - containerPort: 3000
+          name: gitea-http
+        - containerPort: 22
+          name: gitea-ssh
+        volumeMounts:
+        - name: gitea-persistent-storage
+          mountPath: /data
+      volumes:
+      - name: gitea-persistent-storage
+        persistentVolumeClaim:
+          claimName: gt-pv-claim

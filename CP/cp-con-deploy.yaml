@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cp-connector
+  namespace: harbor
+  labels:
+    app: cp-connector
+spec:
+  selector:
+    matchLabels:
+      app: cp-connector
+#  replicas: 2 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: cp-connector
+    spec:
+      hostPID: true
+      hostNetwork: true
+    containers:
+    - name: cp-connector
+      image: cloudpassage/cpconnector:latest
+      args:
+        - "--debug"
+        env:
+          - name: CP_AGENT_KEY
+            value: "0e95d6f7804ab9af4866da41e2eaf8ab"
+          - name: CP_COLLECTOR_GRID_URL
+            value: "https://containers.cloudpassage.com/collectorgrid"
+        volumeMounts:
+          - name: docker-daemon-listener
+            mountPath: /var/run/docker.sock
+          - name: container-images
+            mountPath: /var/lib/docker/containers
+      volumes:
+        - name: docker-daemon-listener
+          hostPath:
+            path: /var/run/docker.sock
+        - name: container-images
+          hostPath:
+            path: /var/lib/docker/containers
+
+# docker run --pid=host --net=host --name cpconnector
+# -v /var/run/docker.sock:/var/run/docker.sock
+# -v /var/lib/docker/containers/:/var/lib/docker/containers/
+# -e CP_AGENT_KEY=0e95d6f7804ab9af4866da41e2eaf8ab
+# -e CP_COLLECTOR_GRID_URL=https://containers.cloudpassage.com/collectorgrid
+# -d cloudpassage/cpconnector --debug

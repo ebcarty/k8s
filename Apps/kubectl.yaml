@@ -1,0 +1,60 @@
+# Kubectl shortcuts
+
+# custom alias for kubectl
+alias ku='kubectl'
+alias kl='kubectl logs'
+#alias klnc='kubectl logs -n nuvoloso-cluster'
+#alias klnm='kubectl logs -n nuvoloso-management'
+alias klks='kubectl logs -n kube-system'
+alias kcf='kubectl create -f'
+alias kaf='kubectl apply -f'
+alias kak='kubectl apply -k'
+alias kdf='kubectl delete -f'
+alias kdk='kubectl delete -k'
+alias kcv='kubectl config view'
+alias kcg='kubectl config get-contexts'
+alias kcc='kubectl config current-context'
+alias kcu='kubectl config use-context'
+alias kdp='kubectl describe pods'
+#alias kdpnm='kubectl describe pods -n nuvoloso-management'
+#alias kdpnc='kubectl describe pods -n nuvoloso-cluster'
+#alias kdelpnm='kubectl delete pod -n nuvoloso-management'
+#alias kdelpnc='kubectl delete pod -n nuvoloso-cluster'
+alias kdpks='kubectl describe pods -n kube-system'
+alias kdn='kubectl describe nodes'
+alias ket='kubectl exec -it'
+#alias ketnm='kubectl exec -it -n nuvoloso-management'
+#alias ketnc='kubectl exec -it -n nuvoloso-cluster'
+alias kgp='kubectl get pods'
+alias kgpa='kubectl get pods --all-namespaces'
+alias kgn='kubectl get nodes'
+alias kgs='kubectl get services'
+alias kgsc='kubectl get sc'
+alias kgpv='kubectl get pv'
+alias kdpv='kubectl delete pv'
+alias kgpvc='kubectl get pvc'
+alias kdpvc='kubectl delete pvc'
+#alias kgsnm='kubectl get services -n nuvoloso-management'
+#alias kgsnc='kubectl get services -n nuvoloso-cluster'
+alias kgsks='kubectl get services -n kube-system'
+#alias kgpnc='kubectl get pods -n nuvoloso-cluster'
+#alias kgpnm='kubectl get pods -n nuvoloso-management'
+alias kgpks='kubectl get pods -n kube-system'
+alias kgns='kubectl get namespaces'
+alias kvc='kops validate cluster'
+alias kuc='kops update cluster'
+alias kucn='kops update cluster ${NAME} --yes'
+alias kdc='kops delete cluster'
+alias kdcn='kops delete cluster --name ${NAME} --yes'
+
+1. Get a vulnerability scan tool -> provides list of vulnerabilities
+Prioritized based on severity, date discovered, ability to deliver within a short time
+
+2. Security, Dev, QA team to check based on the technology version (db ver).
+
+3. Create ticket to upgrade certain component,  updating the version has lots of impacts
+ - can break the backward compability (bugs or issues with actually functionality)
+ - failing tests, builds,
+
+ analyze the impact downstream on dev time, qa time
+ 

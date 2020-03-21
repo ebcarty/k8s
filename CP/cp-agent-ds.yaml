@@ -1,0 +1,73 @@
+# Update the <agent-key> before applying
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cp-halo
+  labels:
+    name: cp-halo
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata: 
+  name: cloudpassage-halo
+  namespace: cp-halo
+  labels:
+    app: halo-agent
+spec:
+  selector:
+    matchLabels:
+      name: cloudpassage-halo
+  template:
+    metadata:
+      labels:
+        name: cloudpassage-halo
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      hostPID: true
+      hostNetwork: true
+      containers:
+      - name: cp-halo-agent
+        securityContext:
+          privileged: true
+        stdin: true
+        tty: true
+        image: cloudpassage/cphalo:latest
+        args:
+          - "--grid=https://grid.cloudpassage.com/grid"
+          - "--enable-docker-inspection=true"
+          - "--debug"
+        env:
+          - name: AGENT_KEY
+            value: d6d1a149fac04bc5d45872e9b91b3a11
+        volumeMounts:
+          - name: docker-sock
+            mountPath: /var/run/docker.sock
+            readOnly: false
+          - name: root
+            mountPath: /media/root
+            readOnly: false
+          - name: cp-data
+            mountPath: /opt/cloudpassage/data
+            readOnly: false
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket
+        - name: root
+          hostPath:
+            path: /
+        - name: cp-data
+          hostPath:
+            path: /opt/cloudpassage/data
+
+
+# docker run --pid=host --net=host --name cphalo --privileged
+# -v /var/run/docker.sock:/var/run/docker.sock
+# -v /:/media/root
+# -v /opt/cloudpassage/data:/opt/cloudpassage/data
+# -e AGENT_KEY=34a44b2980e2df7f6df66555c22cc594
+# -d cloudpassage/cphalo
+# --grid=https://grid.cloudpassage.com/grid

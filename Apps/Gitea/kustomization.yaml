@@ -1,0 +1,16 @@
+secretGenerator:
+- name: mariadb-pass
+  literals:
+  - password=securePassworD
+generatorOptions:
+ disableNameSuffixHash: true
+ #labels:
+   #kustomize.generated.resource: somevalue
+ #annotations:
+   #annotations.only.for.generated: othervalue
+resources:
+    - mariadb-deploy.yaml
+    - gt-deploy.yaml
+    - gt-cip.yaml
+    - gt-ingress.yaml
+    - secret.yaml
